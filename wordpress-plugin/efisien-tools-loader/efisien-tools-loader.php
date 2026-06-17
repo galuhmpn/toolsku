@@ -3,7 +3,7 @@
  * Plugin Name: Efisien Tools Loader
  * Plugin URI: https://github.com/galuhmpn/toolsku
  * Description: Loader universal untuk Kalkulator Material Efisien Tools dari GitHub CDN, dengan shortcode dan integrasi WooCommerce.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Galuh
  * Requires PHP: 7.2
  * Text Domain: efisien-tools-loader
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
     final class Efisien_Tools_Loader {
-        const VERSION = '1.0.0';
+        const VERSION = '1.0.1';
         const OPTION_KEY = 'efisien_tools_loader_options';
 
         public static function init() {
@@ -26,6 +26,8 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             if ( is_admin() ) {
                 add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
                 add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
+                add_filter( 'allowed_options', array( __CLASS__, 'allowed_options' ) );
+                add_filter( 'whitelist_options', array( __CLASS__, 'allowed_options' ) );
             }
         }
 
@@ -358,6 +360,22 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
 
         public static function register_settings() {
             register_setting( 'efisien_tools_loader', self::OPTION_KEY, array( __CLASS__, 'sanitize_options' ) );
+        }
+
+        public static function allowed_options( $allowed_options ) {
+            if ( ! is_array( $allowed_options ) ) {
+                $allowed_options = array();
+            }
+
+            if ( ! isset( $allowed_options['efisien_tools_loader'] ) || ! is_array( $allowed_options['efisien_tools_loader'] ) ) {
+                $allowed_options['efisien_tools_loader'] = array();
+            }
+
+            if ( ! in_array( self::OPTION_KEY, $allowed_options['efisien_tools_loader'], true ) ) {
+                $allowed_options['efisien_tools_loader'][] = self::OPTION_KEY;
+            }
+
+            return $allowed_options;
         }
 
         public static function sanitize_options( $input ) {

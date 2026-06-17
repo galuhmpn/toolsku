@@ -120,8 +120,26 @@ Website interior/lantai kayu:
 
 - HTML statis: taruh script + tag komponen langsung di halaman.
 - Webflow/Wix/Shopify/Ghost/Joomla/Drupal: taruh script di custom code, lalu tag komponen di blok Embed/HTML.
-- WordPress: taruh script via theme/footer/plugin loader, lalu masukkan tag komponen di Custom HTML block.
+- WordPress: gunakan plugin installable di `wordpress-plugin/efisien-tools-loader` atau upload `releases/efisien-tools-loader.zip`, lalu pakai shortcode `[efisien_tool kategori="lighting"]`.
 - React/Vue/Svelte/Angular: muat script sekali di layout/root HTML, lalu pakai tag `<kalkulator-material>` seperti custom element biasa.
+
+## Plugin WordPress
+
+Plugin universal tersedia di:
+
+```text
+wordpress-plugin/efisien-tools-loader/
+releases/efisien-tools-loader.zip
+```
+
+Fitur plugin:
+
+- Memuat engine dan katalog dari GitHub CDN.
+- Shortcode manual: `[efisien_tool kategori="lighting"]`.
+- Shortcode auto produk: `[efisien_tool_auto]`.
+- Settings page di WordPress Admin > Settings > Efisien Tools.
+- Auto tampil di WooCommerce single product, opsional.
+- Kompatibel dengan PHP 7.2+.
 
 ## Inti Sistem
 

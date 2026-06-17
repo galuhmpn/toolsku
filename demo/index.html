@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Material — 10 Variasi Desain (1 Sistem)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@400;600;800&family=Roboto:wght@400;500;700&family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0f172a;--mut:#64748b;--line:#e2e8f0;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:#f1f5f9;}
+  header{padding:40px 24px 28px;text-align:center;background:#fff;border-bottom:1px solid var(--line);}
+  header h1{margin:0 0 8px;font-size:28px;font-weight:800;}
+  header p{margin:0 auto;max-width:680px;color:var(--mut);font-size:15px;line-height:1.55;}
+  .pill{display:inline-block;margin-top:14px;font-size:12px;font-weight:700;color:#1d4ed8;background:#dbeafe;padding:6px 14px;border-radius:999px;}
+  .ctrl{max-width:1240px;margin:20px auto 0;padding:0 24px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center;}
+  .ctrl label{font-size:13px;font-weight:600;color:var(--mut);}
+  .ctrl select,.ctrl input{padding:8px 12px;border:1px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;}
+  .grid{max-width:1240px;margin:30px auto 60px;padding:0 24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:26px;align-items:start;}
+  .cell{display:flex;flex-direction:column;gap:12px;}
+  .cell .meta{display:flex;align-items:baseline;gap:10px;}
+  .cell .meta .no{font-size:13px;font-weight:800;color:#fff;background:#1e293b;width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .cell .meta .nm{font-size:15px;font-weight:700;}
+  .cell .meta .tag{font-size:12px;color:var(--mut);font-family:monospace;}
+  /* tiap stage diberi latar sesuai desain agar tampil maksimal */
+  .stage{padding:22px;border-radius:16px;border:1px solid var(--line);display:flex;justify-content:center;}
+  .bg-classic{background:#f8fafc;}
+  .bg-neumorph{background:#e8ebf3;}
+  .bg-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b);}
+  .bg-dark{background:#010409;}
+  .bg-brutalist{background:#f4f4f0;}
+  .bg-minimal{background:#ffffff;}
+  .bg-gradient{background:#fdf2f8;}
+  .bg-material{background:#fef7ff;}
+  .bg-retro{background:#f3e4cb;}
+  .bg-luxury{background:#0a0805;}
+  footer{text-align:center;color:var(--mut);font-size:13px;padding:24px;border-top:1px solid var(--line);background:#fff;}
+  code{background:#eef2ff;color:#3730a3;padding:2px 6px;border-radius:5px;font-size:12.5px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Kalkulator Material — 1 Tool, 10 Desain</h1>
+  <p>Web Component vanilla — bisa ditanam di <strong>CMS apa pun atau HTML statis</strong> (Webflow, Wix, Shopify, Ghost, framework JS, maupun WordPress). Semua kartu di bawah memakai <strong>mesin hitung, katalog harga, dan lead-capture WhatsApp yang sama persis</strong>; yang berbeda hanya tampilan, lewat atribut <code>desain="…"</code>. Coba ubah kategori &amp; warna brand di bawah — semua kartu ikut berubah serempak.</p>
+  <span class="pill">Sistem tetap sama · tampilan berbeda</span>
+  <div class="ctrl">
+    <label>Kategori
+      <select id="kat">
+        <option value="paving-block">Paving Block</option>
+        <option value="aspal">Aspal Hotmix</option>
+        <option value="marka">Marka Jalan (mode panjang)</option>
+        <option value="lantai-kayu">Lantai Kayu</option>
+        <option value="karpet">Karpet</option>
+        <option value="backdrop">Backdrop</option>
+        <option value="mini-garden">Mini Garden</option>
+      </select>
+    </label>
+    <label>Warna brand
+      <input type="color" id="warna" value="">
+    </label>
+    <label>WhatsApp
+      <input type="text" id="wa" value="628123456789" size="14">
+    </label>
+  </div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>Efisien Tools · Kalkulator Material · satu basis kode, sepuluh wajah.</footer>
+
+<script src="../dist/efisien-material-skins.js" data-catalog="../catalog.json"></script>
+<script>
+  var SKINS = window.EfisienTools.SKIN_BY_INDEX; // urutan 1..10
+  var LABELS = window.EfisienTools.SKINS;
+  var grid = document.getElementById('grid');
+
+  function build() {
+    var kat = document.getElementById('kat').value;
+    var wa = document.getElementById('wa').value;
+    var warna = document.getElementById('warna').value;
+    grid.innerHTML = '';
+    SKINS.forEach(function (skin, i) {
+      var cell = document.createElement('div');
+      cell.className = 'cell';
+      var label = (LABELS[skin] && LABELS[skin].label) || skin;
+      cell.innerHTML =
+        '<div class="meta"><span class="no">' + (i+1) + '</span>' +
+        '<span class="nm">' + label + '</span>' +
+        '<span class="tag">desain="' + skin + '"</span></div>' +
+        '<div class="stage bg-' + skin + '"></div>';
+      var stage = cell.querySelector('.stage');
+      var el = document.createElement('kalkulator-material');
+      el.setAttribute('kategori', kat);
+      el.setAttribute('desain', skin);
+      el.setAttribute('wa', wa);
+      if (warna) el.setAttribute('warna', warna);
+      stage.appendChild(el);
+      grid.appendChild(cell);
+    });
+  }
+
+  document.getElementById('kat').addEventListener('change', build);
+  document.getElementById('wa').addEventListener('input', build);
+  document.getElementById('warna').addEventListener('input', build);
+  // tunggu custom element siap
+  if (window.customElements) { customElements.whenDefined('kalkulator-material').then(build); }
+  build();
+</script>
+</body>
+</html>

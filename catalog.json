@@ -1,0 +1,54 @@
+{
+  "material": {
+    "aspal": { "label": "Aspal Hotmix", "mode": "luas", "satuan": "m²", "waste": 0, "varian": [
+      { "id": "hotmix-3", "nama": "Hotmix tebal 3 cm", "harga": 135000 },
+      { "id": "hotmix-5", "nama": "Hotmix tebal 5 cm", "harga": 170000 },
+      { "id": "latasir", "nama": "Latasir / lapis tipis", "harga": 110000 }
+    ]},
+    "marka": { "label": "Marka Jalan", "mode": "panjang", "satuan": "m", "waste": 0, "varian": [
+      { "id": "thermoplastic", "nama": "Thermoplastic", "harga": 35000 },
+      { "id": "cat-biasa", "nama": "Cat marka biasa", "harga": 18000 },
+      { "id": "coldplastic", "nama": "Cold plastic", "harga": 55000 }
+    ]},
+    "paving-block": { "label": "Paving Block", "mode": "luas", "satuan": "m²", "waste": 5, "varian": [
+      { "id": "bata-natural", "nama": "Bata Natural", "harga": 95000 },
+      { "id": "bata-warna", "nama": "Bata Warna", "harga": 110000 },
+      { "id": "hexagon", "nama": "Hexagon", "harga": 125000 },
+      { "id": "cacing", "nama": "Cacing / Topi Uskup", "harga": 130000 },
+      { "id": "grass-block", "nama": "Grass Block", "harga": 120000 }
+    ]},
+    "lantai-kayu": { "label": "Lantai Kayu", "mode": "luas", "satuan": "m²", "waste": 8, "varian": [
+      { "id": "decking", "nama": "Decking Outdoor", "harga": 450000 },
+      { "id": "parket", "nama": "Parket Solid", "harga": 550000 },
+      { "id": "laminate", "nama": "Laminate / SPC", "harga": 230000 },
+      { "id": "vinyl", "nama": "Vinyl Flooring", "harga": 185000 }
+    ]},
+    "karpet": { "label": "Karpet", "mode": "luas", "satuan": "m²", "waste": 5, "varian": [
+      { "id": "roll-standar", "nama": "Karpet Roll Standar", "harga": 75000 },
+      { "id": "tile", "nama": "Karpet Tile", "harga": 135000 },
+      { "id": "premium", "nama": "Karpet Premium", "harga": 220000 }
+    ]},
+    "backdrop": { "label": "Backdrop", "mode": "luas", "satuan": "m²", "waste": 0, "varian": [
+      { "id": "cetak-only", "nama": "Cetak Flexi (tanpa rangka)", "harga": 35000 },
+      { "id": "cetak-rangka", "nama": "Cetak + Rangka", "harga": 95000 },
+      { "id": "backlit", "nama": "Backlit + Rangka", "harga": 165000 }
+    ]},
+    "mini-garden": { "label": "Mini Garden / Taman", "mode": "luas", "satuan": "m²", "waste": 0, "varian": [
+      { "id": "rumput-gajah", "nama": "Rumput Gajah Mini", "harga": 85000 },
+      { "id": "taman-standar", "nama": "Taman Standar (rumput+tanaman)", "harga": 250000 },
+      { "id": "taman-premium", "nama": "Taman Premium + batu hias", "harga": 450000 }
+    ]}
+  },
+  "paket": [
+    { "id": "panggung", "nama": "Panggung", "satuan": "m²", "harga": 90000 },
+    { "id": "sound", "nama": "Sound System (per set/hari)", "satuan": "set", "harga": 2500000 },
+    { "id": "lighting", "nama": "Lighting (per titik)", "satuan": "titik", "harga": 150000 },
+    { "id": "tenda", "nama": "Tenda (per m²)", "satuan": "m²", "harga": 25000 },
+    { "id": "genset", "nama": "Genset (per unit/hari)", "satuan": "unit", "harga": 1800000 },
+    { "id": "videotron", "nama": "Videotron (per m²/hari)", "satuan": "m²", "harga": 850000 },
+    { "id": "toilet", "nama": "Toilet Portable (per unit/hari)", "satuan": "unit", "harga": 450000 },
+    { "id": "sofa", "nama": "Sofa Set", "satuan": "set", "harga": 350000 },
+    { "id": "tv", "nama": "TV / Plasma (per unit/hari)", "satuan": "unit", "harga": 400000 }
+  ],
+  "videotron": { "hargaPerM2": 850000 }
+}

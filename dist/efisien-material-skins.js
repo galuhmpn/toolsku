@@ -54,6 +54,16 @@
         { id: "cetak-rangka", nama: "Cetak + Rangka", harga: 95000 },
         { id: "backlit", nama: "Backlit + Rangka", harga: 165000 }
       ]},
+      "balon-gate": { label: "Balon Gate", mode: "luas", satuan: "m\u00b2", waste: 0, varian: [
+        { id: "pvc-print", nama: "Balon Gate PVC full print", harga: 185000 },
+        { id: "custom-shape", nama: "Balon Gate custom shape", harga: 240000 },
+        { id: "premium-event", nama: "Balon Gate event premium", harga: 320000 }
+      ]},
+      "lighting": { label: "Lighting", mode: "jumlah", satuan: "titik", waste: 0, varian: [
+        { id: "par-led", nama: "PAR LED", harga: 150000 },
+        { id: "moving-head", nama: "Moving head", harga: 450000 },
+        { id: "lighting-panggung", nama: "Lighting panggung paket titik", harga: 250000 }
+      ]},
       "mini-garden": { label: "Mini Garden / Taman", mode: "luas", satuan: "m\u00b2", waste: 0, varian: [
         { id: "rumput-gajah", nama: "Rumput Gajah Mini", harga: 85000 },
         { id: "taman-standar", nama: "Taman Standar (rumput+tanaman)", harga: 250000 },
@@ -349,7 +359,9 @@
       var opts = c.varian.map(function (v) {
         return '<option value="' + v.id + '">' + esc(v.nama) + (hideHarga ? "" : " \u2014 " + rupiah(v.harga) + "/" + c.satuan) + '</option>';
       }).join("");
-      var dims = c.mode === "panjang"
+      var dims = c.mode === "jumlah"
+        ? '<div><label>Jumlah (' + esc(c.satuan) + ')</label><input id="p" type="number" min="0" value="0" inputmode="decimal"></div>'
+        : c.mode === "panjang"
         ? '<div><label>Panjang (m)</label><input id="p" type="number" min="0" value="0" inputmode="decimal"></div>'
         : '<div><label>Panjang (m)</label><input id="p" type="number" min="0" value="0" inputmode="decimal"></div>' +
           '<div><label>Lebar (m)</label><input id="l" type="number" min="0" value="0" inputmode="decimal"></div>';
@@ -377,7 +389,7 @@
     }
     update() {
       var c = this._c, qty;
-      if (c.mode === "panjang") { qty = num(this.$("#p").value); }
+      if (c.mode === "panjang" || c.mode === "jumlah") { qty = num(this.$("#p").value); }
       else { qty = num(this.$("#p").value) * num(this.$("#l").value); }
       var waste = num(this.$("#waste").value) || 0;
       var qtyW = qty * (1 + waste / 100);

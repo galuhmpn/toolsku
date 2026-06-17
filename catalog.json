@@ -33,6 +33,16 @@
       { "id": "cetak-rangka", "nama": "Cetak + Rangka", "harga": 95000 },
       { "id": "backlit", "nama": "Backlit + Rangka", "harga": 165000 }
     ]},
+    "balon-gate": { "label": "Balon Gate", "mode": "luas", "satuan": "m²", "waste": 0, "varian": [
+      { "id": "pvc-print", "nama": "Balon Gate PVC full print", "harga": 185000 },
+      { "id": "custom-shape", "nama": "Balon Gate custom shape", "harga": 240000 },
+      { "id": "premium-event", "nama": "Balon Gate event premium", "harga": 320000 }
+    ]},
+    "lighting": { "label": "Lighting", "mode": "jumlah", "satuan": "titik", "waste": 0, "varian": [
+      { "id": "par-led", "nama": "PAR LED", "harga": 150000 },
+      { "id": "moving-head", "nama": "Moving head", "harga": 450000 },
+      { "id": "lighting-panggung", "nama": "Lighting panggung paket titik", "harga": 250000 }
+    ]},
     "mini-garden": { "label": "Mini Garden / Taman", "mode": "luas", "satuan": "m²", "waste": 0, "varian": [
       { "id": "rumput-gajah", "nama": "Rumput Gajah Mini", "harga": 85000 },
       { "id": "taman-standar", "nama": "Taman Standar (rumput+tanaman)", "harga": 250000 },

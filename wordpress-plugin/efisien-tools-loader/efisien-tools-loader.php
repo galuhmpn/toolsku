@@ -3,7 +3,7 @@
  * Plugin Name: Efisien Tools Loader
  * Plugin URI: https://github.com/galuhmpn/toolsku
  * Description: Loader universal untuk Kalkulator Material Efisien Tools dari GitHub CDN, dengan shortcode dan integrasi WooCommerce.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Galuh
  * Requires PHP: 7.2
  * Text Domain: efisien-tools-loader
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
     final class Efisien_Tools_Loader {
-        const VERSION = '1.0.1';
+        const VERSION = '1.1.0';
         const OPTION_KEY = 'efisien_tools_loader_options';
 
         public static function init() {
@@ -28,6 +28,8 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                 add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
                 add_filter( 'allowed_options', array( __CLASS__, 'allowed_options' ) );
                 add_filter( 'whitelist_options', array( __CLASS__, 'allowed_options' ) );
+                add_action( 'add_meta_boxes', array( __CLASS__, 'add_product_meta_box' ) );
+                add_action( 'save_post_product', array( __CLASS__, 'save_product_meta' ), 10, 2 );
             }
         }
 
@@ -157,6 +159,47 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             );
         }
 
+        public static function design_labels() {
+            return array(
+                ''          => 'Auto sesuai kategori',
+                'classic'   => 'Classic Card',
+                'neumorph'  => 'Neumorphism',
+                'glass'     => 'Glassmorphism',
+                'dark'      => 'Dark Neon',
+                'brutalist' => 'Neo-Brutalist',
+                'minimal'   => 'Minimal Line',
+                'gradient'  => 'Vibrant Gradient',
+                'material'  => 'Material Design',
+                'retro'     => 'Retro Warm',
+                'luxury'    => 'Luxury Gold',
+            );
+        }
+
+        public static function theme_labels() {
+            return array(
+                ''        => 'Auto sesuai kategori',
+                'aspal'   => 'Aspal',
+                'marka'   => 'Marka',
+                'paving'  => 'Paving',
+                'event'   => 'Event',
+                'pajak'   => 'Pajak',
+                'teknik'  => 'Teknik',
+                'minimal' => 'Minimal',
+            );
+        }
+
+        public static function product_tool_meta( $product_id ) {
+            $product_id = absint( $product_id );
+            return array(
+                'category' => sanitize_key( (string) get_post_meta( $product_id, '_efisien_tool_category', true ) ),
+                'design'   => sanitize_key( (string) get_post_meta( $product_id, '_efisien_tool_design', true ) ),
+                'theme'    => sanitize_key( (string) get_post_meta( $product_id, '_efisien_tool_theme', true ) ),
+                'color'    => sanitize_hex_color( (string) get_post_meta( $product_id, '_efisien_tool_color', true ) ),
+                'title'    => sanitize_text_field( (string) get_post_meta( $product_id, '_efisien_tool_title', true ) ),
+                'disabled' => (string) get_post_meta( $product_id, '_efisien_tool_disabled', true ),
+            );
+        }
+
         public static function resolve_category_for_product( $product_id ) {
             $product_id = absint( $product_id );
             $options = self::options();
@@ -236,14 +279,18 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             $options = self::options();
             $product_id = get_the_ID();
             $category = self::resolve_category_for_product( $product_id );
+            $meta = $product_id ? self::product_tool_meta( $product_id ) : array();
             $title = $product_id ? 'Estimasi Kebutuhan ' . wp_strip_all_tags( get_the_title( $product_id ) ) : '';
+            if ( ! empty( $meta['title'] ) ) {
+                $title = $meta['title'];
+            }
 
             $atts = shortcode_atts(
                 array(
                     'kategori'          => $category,
-                    'desain'            => '',
-                    'tema'              => '',
-                    'warna'             => '',
+                    'desain'            => isset( $meta['design'] ) ? $meta['design'] : '',
+                    'tema'              => isset( $meta['theme'] ) ? $meta['theme'] : '',
+                    'warna'             => isset( $meta['color'] ) ? $meta['color'] : '',
                     'font'              => '',
                     'wa'                => $options['default_wa'],
                     'cta'               => 'Minta Penawaran via WhatsApp',
@@ -314,6 +361,11 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
 
         public static function render_woocommerce_auto_section() {
             $product_id = get_the_ID();
+            $meta = self::product_tool_meta( $product_id );
+            if ( '1' === $meta['disabled'] ) {
+                return;
+            }
+
             $category = self::resolve_category_for_product( $product_id );
             $labels = self::category_labels();
             $label = isset( $labels[ $category ] ) ? $labels[ $category ] : ucwords( str_replace( '-', ' ', $category ) );
@@ -362,6 +414,95 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             register_setting( 'efisien_tools_loader', self::OPTION_KEY, array( __CLASS__, 'sanitize_options' ) );
         }
 
+        public static function add_product_meta_box() {
+            if ( ! post_type_exists( 'product' ) ) {
+                return;
+            }
+
+            add_meta_box(
+                'efisien-tools-product-options',
+                'Efisien Tools',
+                array( __CLASS__, 'render_product_meta_box' ),
+                'product',
+                'side',
+                'default'
+            );
+        }
+
+        public static function render_product_meta_box( $post ) {
+            wp_nonce_field( 'efisien_tools_product_meta', 'efisien_tools_product_meta_nonce' );
+            $meta = self::product_tool_meta( $post->ID );
+            $labels = self::category_labels();
+            $designs = self::design_labels();
+            $themes = self::theme_labels();
+            ?>
+            <p><label><input type="checkbox" name="efisien_tool_disabled" value="1" <?php checked( $meta['disabled'], '1' ); ?>> Nonaktifkan kalkulator untuk produk ini</label></p>
+            <p>
+                <label for="efisien-tool-category"><strong>Kategori Kalkulator</strong></label>
+                <select id="efisien-tool-category" name="efisien_tool_category" style="width:100%;margin-top:4px">
+                    <option value="">Auto dari judul/kategori produk</option>
+                    <?php foreach ( $labels as $key => $label ) : ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $meta['category'], $key ); ?>><?php echo esc_html( $label ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </p>
+            <p>
+                <label for="efisien-tool-design"><strong>Desain</strong></label>
+                <select id="efisien-tool-design" name="efisien_tool_design" style="width:100%;margin-top:4px">
+                    <?php foreach ( $designs as $key => $label ) : ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $meta['design'], $key ); ?>><?php echo esc_html( $label ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </p>
+            <p>
+                <label for="efisien-tool-theme"><strong>Tema Warna</strong></label>
+                <select id="efisien-tool-theme" name="efisien_tool_theme" style="width:100%;margin-top:4px">
+                    <?php foreach ( $themes as $key => $label ) : ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $meta['theme'], $key ); ?>><?php echo esc_html( $label ); ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </p>
+            <p>
+                <label for="efisien-tool-color"><strong>Warna Custom</strong></label>
+                <input id="efisien-tool-color" type="text" name="efisien_tool_color" value="<?php echo esc_attr( $meta['color'] ); ?>" placeholder="#ff7a18" style="width:100%;margin-top:4px">
+            </p>
+            <p>
+                <label for="efisien-tool-title"><strong>Judul Custom</strong></label>
+                <input id="efisien-tool-title" type="text" name="efisien_tool_title" value="<?php echo esc_attr( $meta['title'] ); ?>" placeholder="Kosongkan untuk auto" style="width:100%;margin-top:4px">
+            </p>
+            <p style="color:#646970;font-size:12px">Field kosong akan mengikuti preset otomatis.</p>
+            <?php
+        }
+
+        public static function save_product_meta( $post_id, $post ) {
+            if ( ! isset( $_POST['efisien_tools_product_meta_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['efisien_tools_product_meta_nonce'] ) ), 'efisien_tools_product_meta' ) ) {
+                return;
+            }
+            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+                return;
+            }
+            if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                return;
+            }
+
+            $fields = array(
+                '_efisien_tool_category' => isset( $_POST['efisien_tool_category'] ) ? sanitize_key( wp_unslash( $_POST['efisien_tool_category'] ) ) : '',
+                '_efisien_tool_design'   => isset( $_POST['efisien_tool_design'] ) ? sanitize_key( wp_unslash( $_POST['efisien_tool_design'] ) ) : '',
+                '_efisien_tool_theme'    => isset( $_POST['efisien_tool_theme'] ) ? sanitize_key( wp_unslash( $_POST['efisien_tool_theme'] ) ) : '',
+                '_efisien_tool_color'    => isset( $_POST['efisien_tool_color'] ) ? sanitize_hex_color( wp_unslash( $_POST['efisien_tool_color'] ) ) : '',
+                '_efisien_tool_title'    => isset( $_POST['efisien_tool_title'] ) ? sanitize_text_field( wp_unslash( $_POST['efisien_tool_title'] ) ) : '',
+                '_efisien_tool_disabled' => ! empty( $_POST['efisien_tool_disabled'] ) ? '1' : '',
+            );
+
+            foreach ( $fields as $key => $value ) {
+                if ( '' === $value || null === $value ) {
+                    delete_post_meta( $post_id, $key );
+                } else {
+                    update_post_meta( $post_id, $key, $value );
+                }
+            }
+        }
+
         public static function allowed_options( $allowed_options ) {
             if ( ! is_array( $allowed_options ) ) {
                 $allowed_options = array();
@@ -403,6 +544,9 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             }
             $options = self::options();
             $positions = self::woocommerce_positions();
+            $labels = self::category_labels();
+            $designs = self::design_labels();
+            $themes = self::theme_labels();
             ?>
             <div class="wrap">
                 <h1>Efisien Tools Loader</h1>
@@ -459,6 +603,75 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                 <p><code>[efisien_tool kategori="lighting"]</code></p>
                 <p><code>[efisien_tool kategori="balon-gate" wa="6287785870222"]</code></p>
                 <p><code>[efisien_tool_auto]</code> untuk mengikuti produk WooCommerce saat ini.</p>
+                <hr>
+                <h2>Generator Shortcode</h2>
+                <table class="form-table" role="presentation">
+                    <tr>
+                        <th scope="row"><label for="etl-gen-category">Kategori</label></th>
+                        <td>
+                            <select id="etl-gen-category">
+                                <?php foreach ( $labels as $key => $label ) : ?>
+                                    <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="etl-gen-design">Desain</label></th>
+                        <td>
+                            <select id="etl-gen-design">
+                                <?php foreach ( $designs as $key => $label ) : ?>
+                                    <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="etl-gen-theme">Tema</label></th>
+                        <td>
+                            <select id="etl-gen-theme">
+                                <?php foreach ( $themes as $key => $label ) : ?>
+                                    <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="etl-gen-color">Warna</label></th>
+                        <td><input id="etl-gen-color" type="text" placeholder="#ff7a18"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="etl-gen-wa">WhatsApp</label></th>
+                        <td><input id="etl-gen-wa" type="text" value="<?php echo esc_attr( $options['default_wa'] ); ?>"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><label for="etl-gen-output">Hasil</label></th>
+                        <td>
+                            <input id="etl-gen-output" class="large-text code" type="text" readonly value="">
+                            <p class="description">Salin shortcode ini ke Elementor, Divi, Gutenberg, Classic Editor, atau widget Shortcode.</p>
+                        </td>
+                    </tr>
+                </table>
+                <script>
+                (function(){
+                    function val(id){ var el = document.getElementById(id); return el ? el.value : ''; }
+                    function build(){
+                        var parts = ['[efisien_tool kategori="' + val('etl-gen-category') + '"'];
+                        if (val('etl-gen-design')) parts.push('desain="' + val('etl-gen-design') + '"');
+                        if (val('etl-gen-theme')) parts.push('tema="' + val('etl-gen-theme') + '"');
+                        if (val('etl-gen-color')) parts.push('warna="' + val('etl-gen-color') + '"');
+                        if (val('etl-gen-wa')) parts.push('wa="' + val('etl-gen-wa') + '"');
+                        var out = document.getElementById('etl-gen-output');
+                        if (out) out.value = parts.join(' ') + ']';
+                    }
+                    ['etl-gen-category','etl-gen-design','etl-gen-theme','etl-gen-color','etl-gen-wa'].forEach(function(id){
+                        var el = document.getElementById(id);
+                        if (el) el.addEventListener('input', build);
+                        if (el) el.addEventListener('change', build);
+                    });
+                    build();
+                })();
+                </script>
             </div>
             <?php
         }

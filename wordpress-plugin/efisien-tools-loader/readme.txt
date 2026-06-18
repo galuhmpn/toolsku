@@ -2,7 +2,7 @@
 Contributors: galuh
 Requires at least: 5.0
 Requires PHP: 7.2
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ Ya. Gunakan widget/module Shortcode, Text, HTML, atau Code.
 Default dari `https://cdn.jsdelivr.net/gh/galuhmpn/toolsku@main`.
 
 == Changelog ==
+
+= 1.1.0 =
+* Menambahkan generator shortcode di halaman settings.
+* Menambahkan metabox pilihan kategori/desain/tema/warna di editor produk WooCommerce.
 
 = 1.0.1 =
 * Memperbaiki allowed options registration pada halaman settings.

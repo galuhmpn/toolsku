@@ -3,7 +3,7 @@
  * Plugin Name: Efisien Tools Loader
  * Plugin URI: https://github.com/galuhmpn/toolsku
  * Description: Loader universal untuk Kalkulator Material Efisien Tools dari GitHub CDN, dengan shortcode dan integrasi WooCommerce.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Galuh
  * Requires PHP: 7.2
  * Text Domain: efisien-tools-loader
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
     final class Efisien_Tools_Loader {
-        const VERSION = '1.1.0';
+        const VERSION = '1.2.0';
         const OPTION_KEY = 'efisien_tools_loader_options';
 
         public static function init() {
@@ -185,6 +185,21 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                 'pajak'   => 'Pajak',
                 'teknik'  => 'Teknik',
                 'minimal' => 'Minimal',
+            );
+        }
+
+        public static function design_preview_backgrounds() {
+            return array(
+                'classic'   => '#f8fafc',
+                'neumorph'  => '#e8ebf3',
+                'glass'     => 'linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)',
+                'dark'      => '#010409',
+                'brutalist' => '#f4f4f0',
+                'minimal'   => '#ffffff',
+                'gradient'  => '#fdf2f8',
+                'material'  => '#fef7ff',
+                'retro'     => '#f3e4cb',
+                'luxury'    => '#0a0805',
             );
         }
 
@@ -435,6 +450,7 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             $labels = self::category_labels();
             $designs = self::design_labels();
             $themes = self::theme_labels();
+            $preview_backgrounds = self::design_preview_backgrounds();
             ?>
             <p><label><input type="checkbox" name="efisien_tool_disabled" value="1" <?php checked( $meta['disabled'], '1' ); ?>> Nonaktifkan kalkulator untuk produk ini</label></p>
             <p>
@@ -605,6 +621,7 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                 <p><code>[efisien_tool_auto]</code> untuk mengikuti produk WooCommerce saat ini.</p>
                 <hr>
                 <h2>Generator Shortcode</h2>
+                <p>Pilih variasi secara visual, lihat preview langsung, lalu salin shortcode yang dihasilkan.</p>
                 <table class="form-table" role="presentation">
                     <tr>
                         <th scope="row"><label for="etl-gen-category">Kategori</label></th>
@@ -652,9 +669,55 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         </td>
                     </tr>
                 </table>
+                <div class="etl-visual-builder">
+                    <div>
+                        <h3>Pilih Desain</h3>
+                        <div class="etl-design-grid">
+                            <?php foreach ( $designs as $key => $label ) : ?>
+                                <?php if ( '' === $key ) { continue; } ?>
+                                <button type="button" class="etl-design-card" data-design="<?php echo esc_attr( $key ); ?>" style="--etl-card-bg:<?php echo esc_attr( isset( $preview_backgrounds[ $key ] ) ? $preview_backgrounds[ $key ] : '#fff' ); ?>">
+                                    <span class="etl-design-card__preview"></span>
+                                    <strong><?php echo esc_html( $label ); ?></strong>
+                                    <small>desain="<?php echo esc_html( $key ); ?>"</small>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div>
+                        <h3>Preview Langsung</h3>
+                        <div class="etl-live-stage" id="etl-live-stage">
+                            <kalkulator-material id="etl-live-preview" kategori="lighting" desain="dark" tema="event" wa="<?php echo esc_attr( $options['default_wa'] ); ?>"></kalkulator-material>
+                        </div>
+                    </div>
+                </div>
+                <script src="<?php echo esc_url( self::script_url() ); ?>" data-catalog="<?php echo esc_url( self::catalog_url() ); ?>" id="efisien-material-skins-admin-preview"></script>
+                <style>
+                    .etl-visual-builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,480px);gap:24px;align-items:start;margin-top:18px}.etl-design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.etl-design-card{display:grid;gap:8px;text-align:left;border:1px solid #dcdcde;border-radius:10px;background:#fff;padding:10px;cursor:pointer}.etl-design-card:hover,.etl-design-card.is-active{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.14)}.etl-design-card__preview{display:block;height:66px;border-radius:8px;background:var(--etl-card-bg);border:1px solid rgba(0,0,0,.08)}.etl-design-card strong{font-size:13px;color:#1d2327}.etl-design-card small{font-size:11px;color:#646970}.etl-live-stage{display:flex;justify-content:center;padding:18px;border:1px solid #dcdcde;border-radius:12px;background:#f6f7f7;min-height:560px}.etl-live-stage.is-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)}.etl-live-stage.is-dark{background:#010409}.etl-live-stage.is-luxury{background:#0a0805}.etl-live-stage.is-neumorph{background:#e8ebf3}.etl-live-stage.is-brutalist{background:#f4f4f0}.etl-live-stage.is-retro{background:#f3e4cb}@media(max-width:1100px){.etl-visual-builder{grid-template-columns:1fr}.etl-live-stage{min-height:auto}}
+                </style>
                 <script>
                 (function(){
                     function val(id){ var el = document.getElementById(id); return el ? el.value : ''; }
+                    function setVal(id, value){ var el = document.getElementById(id); if (el) el.value = value; }
+                    function syncPreview(){
+                        var preview = document.getElementById('etl-live-preview');
+                        var stage = document.getElementById('etl-live-stage');
+                        if (!preview) return;
+                        var category = val('etl-gen-category') || 'backdrop';
+                        var design = val('etl-gen-design') || 'classic';
+                        var theme = val('etl-gen-theme');
+                        var color = val('etl-gen-color');
+                        var wa = val('etl-gen-wa');
+                        preview.setAttribute('kategori', category);
+                        preview.setAttribute('desain', design);
+                        if (theme) preview.setAttribute('tema', theme); else preview.removeAttribute('tema');
+                        if (color) preview.setAttribute('warna', color); else preview.removeAttribute('warna');
+                        if (wa) preview.setAttribute('wa', wa); else preview.removeAttribute('wa');
+                        if (stage) stage.className = 'etl-live-stage is-' + design;
+                        var cards = document.querySelectorAll('.etl-design-card');
+                        for (var i = 0; i < cards.length; i++) {
+                            cards[i].classList.toggle('is-active', cards[i].getAttribute('data-design') === design);
+                        }
+                    }
                     function build(){
                         var parts = ['[efisien_tool kategori="' + val('etl-gen-category') + '"'];
                         if (val('etl-gen-design')) parts.push('desain="' + val('etl-gen-design') + '"');
@@ -663,12 +726,20 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         if (val('etl-gen-wa')) parts.push('wa="' + val('etl-gen-wa') + '"');
                         var out = document.getElementById('etl-gen-output');
                         if (out) out.value = parts.join(' ') + ']';
+                        syncPreview();
                     }
                     ['etl-gen-category','etl-gen-design','etl-gen-theme','etl-gen-color','etl-gen-wa'].forEach(function(id){
                         var el = document.getElementById(id);
                         if (el) el.addEventListener('input', build);
                         if (el) el.addEventListener('change', build);
                     });
+                    var cards = document.querySelectorAll('.etl-design-card');
+                    for (var i = 0; i < cards.length; i++) {
+                        cards[i].addEventListener('click', function(){
+                            setVal('etl-gen-design', this.getAttribute('data-design') || '');
+                            build();
+                        });
+                    }
                     build();
                 })();
                 </script>

@@ -2,7 +2,7 @@
 Contributors: galuh
 Requires at least: 5.0
 Requires PHP: 7.2
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,10 @@ Ya. Gunakan widget/module Shortcode, Text, HTML, atau Code.
 Default dari `https://cdn.jsdelivr.net/gh/galuhmpn/toolsku@main`.
 
 == Changelog ==
+
+= 1.3.1 =
+* Mengubah field warna custom di visual picker menjadi color picker, bukan input kode manual.
+* Menambahkan opsi Ikuti tema agar shortcode tidak wajib memakai warna custom.
 
 = 1.3.0 =
 * Menyederhanakan halaman Settings > Efisien Tools agar generator visual menjadi fokus utama.

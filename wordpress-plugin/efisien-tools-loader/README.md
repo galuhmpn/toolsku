@@ -33,7 +33,8 @@ Di Settings > Efisien Tools, gunakan panel Buat Tampilan Kalkulator:
 1. Pilih kategori produk, misalnya `lighting` atau `balon-gate`.
 2. Pilih desain visual dari kartu preview.
 3. Cek preview langsung.
-4. Klik Salin shortcode, lalu tempel ke Elementor, Divi, Gutenberg, Classic Editor, atau widget Shortcode.
+4. Jika perlu, aktifkan warna custom lalu pilih warna dari color picker.
+5. Klik Salin shortcode, lalu tempel ke Elementor, Divi, Gutenberg, Classic Editor, atau widget Shortcode.
 
 Pengaturan teknis dan auto WooCommerce tetap tersedia di panel lipat pada halaman yang sama.
 

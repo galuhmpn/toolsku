@@ -3,7 +3,7 @@
  * Plugin Name: Efisien Tools Loader
  * Plugin URI: https://github.com/galuhmpn/toolsku
  * Description: Loader universal untuk Kalkulator Material Efisien Tools dari GitHub CDN, dengan shortcode dan integrasi WooCommerce.
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: Galuh
  * Requires PHP: 7.2
  * Text Domain: efisien-tools-loader
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
     final class Efisien_Tools_Loader {
-        const VERSION = '1.3.0';
+        const VERSION = '1.3.1';
         const OPTION_KEY = 'efisien_tools_loader_options';
 
         public static function init() {
@@ -646,10 +646,14 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                                 <?php endforeach; ?>
                             </select>
                         </label>
-                        <label class="etl-field" for="etl-gen-color">
+                        <div class="etl-field">
                             <span>Warna custom</span>
-                            <input id="etl-gen-color" type="text" placeholder="#ff7a18">
-                        </label>
+                            <div class="etl-color-control">
+                                <label class="etl-color-toggle" for="etl-gen-color-enabled"><input id="etl-gen-color-enabled" type="checkbox" value="1"> Pakai warna custom</label>
+                                <input id="etl-gen-color" type="color" value="#ff7a18" aria-label="Pilih warna custom">
+                                <button type="button" class="button" id="etl-clear-color">Ikuti tema</button>
+                            </div>
+                        </div>
                         <label class="etl-field" for="etl-gen-wa">
                             <span>Nomor WhatsApp</span>
                             <input id="etl-gen-wa" type="text" value="<?php echo esc_attr( $options['default_wa'] ); ?>">
@@ -691,12 +695,16 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                 </details>
                 <script src="<?php echo esc_url( self::script_url() ); ?>" data-catalog="<?php echo esc_url( self::catalog_url() ); ?>" id="efisien-material-skins-admin-preview"></script>
                 <style>
-                    .etl-lead{max-width:860px;font-size:15px;color:#50575e}.etl-settings-panel,.etl-help-panel{max-width:980px;margin:18px 0 22px;border:1px solid #dcdcde;border-radius:10px;background:#fff}.etl-settings-panel summary,.etl-help-panel summary{cursor:pointer;padding:14px 16px;font-weight:700}.etl-settings-panel form,.etl-help-panel p{padding:0 16px}.etl-help-panel{margin-top:24px}.etl-help-panel p:last-child{padding-bottom:14px}.etl-builder-panel{max-width:980px;margin:18px 0 20px;padding:16px;border:1px solid #dcdcde;border-radius:14px;background:#fff}.etl-field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}.etl-field,.etl-output-label{display:grid;gap:6px;font-weight:600;color:#1d2327}.etl-field span,.etl-output-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#50575e}.etl-field select,.etl-field input{width:100%;min-height:36px}.etl-output-row{display:flex;gap:8px;align-items:center}.etl-output-row input{min-height:38px}.etl-output-row .button{min-height:38px;white-space:nowrap}.etl-visual-builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,500px);gap:24px;align-items:start;margin-top:18px}.etl-design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}.etl-design-card{display:grid;gap:8px;text-align:left;border:1px solid #dcdcde;border-radius:12px;background:#fff;padding:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.etl-design-card:hover,.etl-design-card.is-active{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.14)}.etl-design-card:hover{transform:translateY(-1px)}.etl-design-card__preview{position:relative;display:block;height:74px;border-radius:10px;background:var(--etl-card-bg);border:1px solid rgba(0,0,0,.08);overflow:hidden}.etl-design-card__preview span{position:absolute;left:12px;right:12px;top:12px;height:44px;border-radius:8px;background:rgba(255,255,255,.88);box-shadow:0 8px 24px rgba(0,0,0,.10)}.etl-design-card__preview i,.etl-design-card__preview em{position:absolute;left:22px;right:22px;height:5px;border-radius:999px;background:#dbeafe}.etl-design-card__preview i{top:24px}.etl-design-card__preview em{top:38px;right:48px;background:#93c5fd}.etl-design-card[data-design="dark"] .etl-design-card__preview span,.etl-design-card[data-design="luxury"] .etl-design-card__preview span{background:#141a22;border:1px solid rgba(255,255,255,.16)}.etl-design-card[data-design="brutalist"] .etl-design-card__preview span{border:2px solid #000;border-radius:0;box-shadow:5px 5px 0 #000}.etl-design-card[data-design="minimal"] .etl-design-card__preview span{box-shadow:none;border-bottom:2px solid #111;border-radius:0}.etl-design-card strong{font-size:13px;color:#1d2327}.etl-design-card small{font-size:11px;color:#646970}.etl-live-stage{position:sticky;top:48px;display:flex;justify-content:center;padding:18px;border:1px solid #dcdcde;border-radius:14px;background:#f6f7f7;min-height:560px}.etl-live-stage.is-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)}.etl-live-stage.is-dark{background:#010409}.etl-live-stage.is-luxury{background:#0a0805}.etl-live-stage.is-neumorph{background:#e8ebf3}.etl-live-stage.is-brutalist{background:#f4f4f0}.etl-live-stage.is-retro{background:#f3e4cb}@media(max-width:1100px){.etl-visual-builder{grid-template-columns:1fr}.etl-live-stage{position:static;min-height:auto}}@media(max-width:700px){.etl-output-row{display:block}.etl-output-row .button{margin-top:8px;width:100%}.etl-design-grid{grid-template-columns:1fr 1fr}}
+                    .etl-lead{max-width:860px;font-size:15px;color:#50575e}.etl-settings-panel,.etl-help-panel{max-width:980px;margin:18px 0 22px;border:1px solid #dcdcde;border-radius:10px;background:#fff}.etl-settings-panel summary,.etl-help-panel summary{cursor:pointer;padding:14px 16px;font-weight:700}.etl-settings-panel form,.etl-help-panel p{padding:0 16px}.etl-help-panel{margin-top:24px}.etl-help-panel p:last-child{padding-bottom:14px}.etl-builder-panel{max-width:980px;margin:18px 0 20px;padding:16px;border:1px solid #dcdcde;border-radius:14px;background:#fff}.etl-field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}.etl-field,.etl-output-label{display:grid;gap:6px;font-weight:600;color:#1d2327}.etl-field span,.etl-output-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#50575e}.etl-field select,.etl-field input{width:100%;min-height:36px}.etl-color-control{display:flex;align-items:center;gap:8px}.etl-color-toggle{display:flex;align-items:center;gap:6px;font-weight:600;white-space:nowrap}.etl-color-control input[type="checkbox"]{width:18px;min-height:18px}.etl-color-control input[type="color"]{width:64px;min-height:38px;padding:2px;border:1px solid #8c8f94;border-radius:6px;background:#fff;cursor:pointer}.etl-color-control .button{min-height:38px;white-space:nowrap}.etl-output-row{display:flex;gap:8px;align-items:center}.etl-output-row input{min-height:38px}.etl-output-row .button{min-height:38px;white-space:nowrap}.etl-visual-builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,500px);gap:24px;align-items:start;margin-top:18px}.etl-design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}.etl-design-card{display:grid;gap:8px;text-align:left;border:1px solid #dcdcde;border-radius:12px;background:#fff;padding:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.etl-design-card:hover,.etl-design-card.is-active{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.14)}.etl-design-card:hover{transform:translateY(-1px)}.etl-design-card__preview{position:relative;display:block;height:74px;border-radius:10px;background:var(--etl-card-bg);border:1px solid rgba(0,0,0,.08);overflow:hidden}.etl-design-card__preview span{position:absolute;left:12px;right:12px;top:12px;height:44px;border-radius:8px;background:rgba(255,255,255,.88);box-shadow:0 8px 24px rgba(0,0,0,.10)}.etl-design-card__preview i,.etl-design-card__preview em{position:absolute;left:22px;right:22px;height:5px;border-radius:999px;background:#dbeafe}.etl-design-card__preview i{top:24px}.etl-design-card__preview em{top:38px;right:48px;background:#93c5fd}.etl-design-card[data-design="dark"] .etl-design-card__preview span,.etl-design-card[data-design="luxury"] .etl-design-card__preview span{background:#141a22;border:1px solid rgba(255,255,255,.16)}.etl-design-card[data-design="brutalist"] .etl-design-card__preview span{border:2px solid #000;border-radius:0;box-shadow:5px 5px 0 #000}.etl-design-card[data-design="minimal"] .etl-design-card__preview span{box-shadow:none;border-bottom:2px solid #111;border-radius:0}.etl-design-card strong{font-size:13px;color:#1d2327}.etl-design-card small{font-size:11px;color:#646970}.etl-live-stage{position:sticky;top:48px;display:flex;justify-content:center;padding:18px;border:1px solid #dcdcde;border-radius:14px;background:#f6f7f7;min-height:560px}.etl-live-stage.is-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)}.etl-live-stage.is-dark{background:#010409}.etl-live-stage.is-luxury{background:#0a0805}.etl-live-stage.is-neumorph{background:#e8ebf3}.etl-live-stage.is-brutalist{background:#f4f4f0}.etl-live-stage.is-retro{background:#f3e4cb}@media(max-width:1100px){.etl-visual-builder{grid-template-columns:1fr}.etl-live-stage{position:static;min-height:auto}}@media(max-width:700px){.etl-color-control{flex-wrap:wrap}.etl-output-row{display:block}.etl-output-row .button{margin-top:8px;width:100%}.etl-design-grid{grid-template-columns:1fr 1fr}}
                 </style>
                 <script>
                 (function(){
                     function val(id){ var el = document.getElementById(id); return el ? el.value : ''; }
                     function setVal(id, value){ var el = document.getElementById(id); if (el) el.value = value; }
+                    function customColor(){
+                        var enabled = document.getElementById('etl-gen-color-enabled');
+                        return enabled && enabled.checked ? val('etl-gen-color') : '';
+                    }
                     function syncPreview(){
                         var preview = document.getElementById('etl-live-preview');
                         var stage = document.getElementById('etl-live-stage');
@@ -704,7 +712,7 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         var category = val('etl-gen-category') || 'backdrop';
                         var design = val('etl-gen-design') || 'classic';
                         var theme = val('etl-gen-theme');
-                        var color = val('etl-gen-color');
+                        var color = customColor();
                         var wa = val('etl-gen-wa');
                         preview.setAttribute('kategori', category);
                         preview.setAttribute('desain', design);
@@ -721,7 +729,7 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         var parts = ['[efisien_tool kategori="' + val('etl-gen-category') + '"'];
                         if (val('etl-gen-design')) parts.push('desain="' + val('etl-gen-design') + '"');
                         if (val('etl-gen-theme')) parts.push('tema="' + val('etl-gen-theme') + '"');
-                        if (val('etl-gen-color')) parts.push('warna="' + val('etl-gen-color') + '"');
+                        if (customColor()) parts.push('warna="' + customColor() + '"');
                         if (val('etl-gen-wa')) parts.push('wa="' + val('etl-gen-wa') + '"');
                         var out = document.getElementById('etl-gen-output');
                         if (out) out.value = parts.join(' ') + ']';
@@ -742,10 +750,29 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                             }
                         } catch(e) {}
                     }
-                    ['etl-gen-category','etl-gen-design','etl-gen-theme','etl-gen-color','etl-gen-wa'].forEach(function(id){
+                    ['etl-gen-category','etl-gen-design','etl-gen-theme','etl-gen-color','etl-gen-color-enabled','etl-gen-wa'].forEach(function(id){
                         var el = document.getElementById(id);
                         if (el) el.addEventListener('input', build);
                         if (el) el.addEventListener('change', build);
+                    });
+                    var color = document.getElementById('etl-gen-color');
+                    if (color) {
+                        color.addEventListener('input', function(){
+                            var enabled = document.getElementById('etl-gen-color-enabled');
+                            if (enabled) enabled.checked = true;
+                            build();
+                        });
+                        color.addEventListener('change', function(){
+                            var enabled = document.getElementById('etl-gen-color-enabled');
+                            if (enabled) enabled.checked = true;
+                            build();
+                        });
+                    }
+                    var clearColor = document.getElementById('etl-clear-color');
+                    if (clearColor) clearColor.addEventListener('click', function(){
+                        var enabled = document.getElementById('etl-gen-color-enabled');
+                        if (enabled) enabled.checked = false;
+                        build();
                     });
                     var cards = document.querySelectorAll('.etl-design-card');
                     for (var i = 0; i < cards.length; i++) {

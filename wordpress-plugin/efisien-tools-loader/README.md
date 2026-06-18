@@ -24,7 +24,18 @@ https://cdn.jsdelivr.net/gh/galuhmpn/toolsku@main/catalog.json
 3. Plugins > Add New > Upload Plugin.
 4. Upload `efisien-tools-loader.zip`.
 5. Activate.
-6. Buka Settings > Efisien Tools untuk mengatur WhatsApp default dan auto WooCommerce.
+6. Buka Settings > Efisien Tools untuk memilih kategori, desain, tema warna, dan membuat shortcode dari visual picker.
+
+## Visual Picker
+
+Di Settings > Efisien Tools, gunakan panel Buat Tampilan Kalkulator:
+
+1. Pilih kategori produk, misalnya `lighting` atau `balon-gate`.
+2. Pilih desain visual dari kartu preview.
+3. Cek preview langsung.
+4. Klik Salin shortcode, lalu tempel ke Elementor, Divi, Gutenberg, Classic Editor, atau widget Shortcode.
+
+Pengaturan teknis dan auto WooCommerce tetap tersedia di panel lipat pada halaman yang sama.
 
 ## Shortcode Manual
 

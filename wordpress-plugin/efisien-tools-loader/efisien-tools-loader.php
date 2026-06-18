@@ -3,7 +3,7 @@
  * Plugin Name: Efisien Tools Loader
  * Plugin URI: https://github.com/galuhmpn/toolsku
  * Description: Loader universal untuk Kalkulator Material Efisien Tools dari GitHub CDN, dengan shortcode dan integrasi WooCommerce.
- * Version: 1.2.0
+ * Version: 1.3.0
  * Author: Galuh
  * Requires PHP: 7.2
  * Text Domain: efisien-tools-loader
@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
     final class Efisien_Tools_Loader {
-        const VERSION = '1.2.0';
+        const VERSION = '1.3.0';
         const OPTION_KEY = 'efisien_tools_loader_options';
 
         public static function init() {
@@ -450,7 +450,6 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             $labels = self::category_labels();
             $designs = self::design_labels();
             $themes = self::theme_labels();
-            $preview_backgrounds = self::design_preview_backgrounds();
             ?>
             <p><label><input type="checkbox" name="efisien_tool_disabled" value="1" <?php checked( $meta['disabled'], '1' ); ?>> Nonaktifkan kalkulator untuk produk ini</label></p>
             <p>
@@ -563,9 +562,13 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
             $labels = self::category_labels();
             $designs = self::design_labels();
             $themes = self::theme_labels();
+            $preview_backgrounds = self::design_preview_backgrounds();
             ?>
             <div class="wrap">
                 <h1>Efisien Tools Loader</h1>
+                <p class="etl-lead">Mulai dari sini: pilih kategori produk, pilih desain yang cocok, cek preview, lalu salin shortcode ke Elementor, Divi, Gutenberg, atau editor WordPress.</p>
+                <details class="etl-settings-panel">
+                    <summary>Pengaturan teknis &amp; WooCommerce otomatis</summary>
                 <form method="post" action="options.php">
                     <?php settings_fields( 'efisien_tools_loader' ); ?>
                     <table class="form-table" role="presentation">
@@ -609,74 +612,64 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         </tr>
                         <tr>
                             <th scope="row">Teks Konteks</th>
-                            <td><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_KEY ); ?>[show_context]" value="1" <?php checked( $options['show_context'], '1' ); ?>> Tampilkan teks “Kalkulator: Lighting/Balon Gate” di auto section</label></td>
+                            <td><label><input type="checkbox" name="<?php echo esc_attr( self::OPTION_KEY ); ?>[show_context]" value="1" <?php checked( $options['show_context'], '1' ); ?>> Tampilkan teks &quot;Kalkulator: Lighting/Balon Gate&quot; di auto section</label></td>
                         </tr>
                     </table>
                     <?php submit_button(); ?>
                 </form>
-                <hr>
-                <h2>Shortcode</h2>
-                <p><code>[efisien_tool kategori="lighting"]</code></p>
-                <p><code>[efisien_tool kategori="balon-gate" wa="6287785870222"]</code></p>
-                <p><code>[efisien_tool_auto]</code> untuk mengikuti produk WooCommerce saat ini.</p>
-                <hr>
-                <h2>Generator Shortcode</h2>
-                <p>Pilih variasi secara visual, lihat preview langsung, lalu salin shortcode yang dihasilkan.</p>
-                <table class="form-table" role="presentation">
-                    <tr>
-                        <th scope="row"><label for="etl-gen-category">Kategori</label></th>
-                        <td>
+                </details>
+                <h2>Buat Tampilan Kalkulator</h2>
+                <p>Pilih variasi secara visual. Shortcode akan dibuat otomatis dan preview akan ikut berubah.</p>
+                <div class="etl-builder-panel">
+                    <div class="etl-field-grid">
+                        <label class="etl-field" for="etl-gen-category">
+                            <span>1. Kategori produk</span>
                             <select id="etl-gen-category">
                                 <?php foreach ( $labels as $key => $label ) : ?>
                                     <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="etl-gen-design">Desain</label></th>
-                        <td>
+                        </label>
+                        <label class="etl-field" for="etl-gen-design">
+                            <span>2. Desain</span>
                             <select id="etl-gen-design">
                                 <?php foreach ( $designs as $key => $label ) : ?>
                                     <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="etl-gen-theme">Tema</label></th>
-                        <td>
+                        </label>
+                        <label class="etl-field" for="etl-gen-theme">
+                            <span>3. Tema warna</span>
                             <select id="etl-gen-theme">
                                 <?php foreach ( $themes as $key => $label ) : ?>
                                     <option value="<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></option>
                                 <?php endforeach; ?>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="etl-gen-color">Warna</label></th>
-                        <td><input id="etl-gen-color" type="text" placeholder="#ff7a18"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="etl-gen-wa">WhatsApp</label></th>
-                        <td><input id="etl-gen-wa" type="text" value="<?php echo esc_attr( $options['default_wa'] ); ?>"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><label for="etl-gen-output">Hasil</label></th>
-                        <td>
-                            <input id="etl-gen-output" class="large-text code" type="text" readonly value="">
-                            <p class="description">Salin shortcode ini ke Elementor, Divi, Gutenberg, Classic Editor, atau widget Shortcode.</p>
-                        </td>
-                    </tr>
-                </table>
+                        </label>
+                        <label class="etl-field" for="etl-gen-color">
+                            <span>Warna custom</span>
+                            <input id="etl-gen-color" type="text" placeholder="#ff7a18">
+                        </label>
+                        <label class="etl-field" for="etl-gen-wa">
+                            <span>Nomor WhatsApp</span>
+                            <input id="etl-gen-wa" type="text" value="<?php echo esc_attr( $options['default_wa'] ); ?>">
+                        </label>
+                    </div>
+                    <label class="etl-output-label" for="etl-gen-output">Shortcode siap pakai</label>
+                    <div class="etl-output-row">
+                        <input id="etl-gen-output" class="large-text code" type="text" readonly value="">
+                        <button type="button" class="button button-primary" id="etl-copy-shortcode">Salin shortcode</button>
+                    </div>
+                    <p class="description">Tempel shortcode ini ke widget Shortcode Elementor, Code/Text module Divi, Gutenberg, Classic Editor, atau widget Shortcode.</p>
+                </div>
                 <div class="etl-visual-builder">
                     <div>
-                        <h3>Pilih Desain</h3>
+                        <h3>Pilih Desain Visual</h3>
                         <div class="etl-design-grid">
                             <?php foreach ( $designs as $key => $label ) : ?>
                                 <?php if ( '' === $key ) { continue; } ?>
                                 <button type="button" class="etl-design-card" data-design="<?php echo esc_attr( $key ); ?>" style="--etl-card-bg:<?php echo esc_attr( isset( $preview_backgrounds[ $key ] ) ? $preview_backgrounds[ $key ] : '#fff' ); ?>">
-                                    <span class="etl-design-card__preview"></span>
+                                    <span class="etl-design-card__preview"><span></span><i></i><em></em></span>
                                     <strong><?php echo esc_html( $label ); ?></strong>
                                     <small>desain="<?php echo esc_html( $key ); ?>"</small>
                                 </button>
@@ -690,9 +683,15 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         </div>
                     </div>
                 </div>
+                <details class="etl-help-panel">
+                    <summary>Contoh shortcode dan cara pasang</summary>
+                    <p><code>[efisien_tool kategori="lighting"]</code></p>
+                    <p><code>[efisien_tool kategori="balon-gate" wa="6287785870222"]</code></p>
+                    <p><code>[efisien_tool_auto]</code> untuk mengikuti produk WooCommerce saat ini.</p>
+                </details>
                 <script src="<?php echo esc_url( self::script_url() ); ?>" data-catalog="<?php echo esc_url( self::catalog_url() ); ?>" id="efisien-material-skins-admin-preview"></script>
                 <style>
-                    .etl-visual-builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,480px);gap:24px;align-items:start;margin-top:18px}.etl-design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}.etl-design-card{display:grid;gap:8px;text-align:left;border:1px solid #dcdcde;border-radius:10px;background:#fff;padding:10px;cursor:pointer}.etl-design-card:hover,.etl-design-card.is-active{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.14)}.etl-design-card__preview{display:block;height:66px;border-radius:8px;background:var(--etl-card-bg);border:1px solid rgba(0,0,0,.08)}.etl-design-card strong{font-size:13px;color:#1d2327}.etl-design-card small{font-size:11px;color:#646970}.etl-live-stage{display:flex;justify-content:center;padding:18px;border:1px solid #dcdcde;border-radius:12px;background:#f6f7f7;min-height:560px}.etl-live-stage.is-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)}.etl-live-stage.is-dark{background:#010409}.etl-live-stage.is-luxury{background:#0a0805}.etl-live-stage.is-neumorph{background:#e8ebf3}.etl-live-stage.is-brutalist{background:#f4f4f0}.etl-live-stage.is-retro{background:#f3e4cb}@media(max-width:1100px){.etl-visual-builder{grid-template-columns:1fr}.etl-live-stage{min-height:auto}}
+                    .etl-lead{max-width:860px;font-size:15px;color:#50575e}.etl-settings-panel,.etl-help-panel{max-width:980px;margin:18px 0 22px;border:1px solid #dcdcde;border-radius:10px;background:#fff}.etl-settings-panel summary,.etl-help-panel summary{cursor:pointer;padding:14px 16px;font-weight:700}.etl-settings-panel form,.etl-help-panel p{padding:0 16px}.etl-help-panel{margin-top:24px}.etl-help-panel p:last-child{padding-bottom:14px}.etl-builder-panel{max-width:980px;margin:18px 0 20px;padding:16px;border:1px solid #dcdcde;border-radius:14px;background:#fff}.etl-field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:14px}.etl-field,.etl-output-label{display:grid;gap:6px;font-weight:600;color:#1d2327}.etl-field span,.etl-output-label{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#50575e}.etl-field select,.etl-field input{width:100%;min-height:36px}.etl-output-row{display:flex;gap:8px;align-items:center}.etl-output-row input{min-height:38px}.etl-output-row .button{min-height:38px;white-space:nowrap}.etl-visual-builder{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,500px);gap:24px;align-items:start;margin-top:18px}.etl-design-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}.etl-design-card{display:grid;gap:8px;text-align:left;border:1px solid #dcdcde;border-radius:12px;background:#fff;padding:10px;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .15s}.etl-design-card:hover,.etl-design-card.is-active{border-color:#2271b1;box-shadow:0 0 0 2px rgba(34,113,177,.14)}.etl-design-card:hover{transform:translateY(-1px)}.etl-design-card__preview{position:relative;display:block;height:74px;border-radius:10px;background:var(--etl-card-bg);border:1px solid rgba(0,0,0,.08);overflow:hidden}.etl-design-card__preview span{position:absolute;left:12px;right:12px;top:12px;height:44px;border-radius:8px;background:rgba(255,255,255,.88);box-shadow:0 8px 24px rgba(0,0,0,.10)}.etl-design-card__preview i,.etl-design-card__preview em{position:absolute;left:22px;right:22px;height:5px;border-radius:999px;background:#dbeafe}.etl-design-card__preview i{top:24px}.etl-design-card__preview em{top:38px;right:48px;background:#93c5fd}.etl-design-card[data-design="dark"] .etl-design-card__preview span,.etl-design-card[data-design="luxury"] .etl-design-card__preview span{background:#141a22;border:1px solid rgba(255,255,255,.16)}.etl-design-card[data-design="brutalist"] .etl-design-card__preview span{border:2px solid #000;border-radius:0;box-shadow:5px 5px 0 #000}.etl-design-card[data-design="minimal"] .etl-design-card__preview span{box-shadow:none;border-bottom:2px solid #111;border-radius:0}.etl-design-card strong{font-size:13px;color:#1d2327}.etl-design-card small{font-size:11px;color:#646970}.etl-live-stage{position:sticky;top:48px;display:flex;justify-content:center;padding:18px;border:1px solid #dcdcde;border-radius:14px;background:#f6f7f7;min-height:560px}.etl-live-stage.is-glass{background:linear-gradient(135deg,#6366f1,#ec4899,#f59e0b)}.etl-live-stage.is-dark{background:#010409}.etl-live-stage.is-luxury{background:#0a0805}.etl-live-stage.is-neumorph{background:#e8ebf3}.etl-live-stage.is-brutalist{background:#f4f4f0}.etl-live-stage.is-retro{background:#f3e4cb}@media(max-width:1100px){.etl-visual-builder{grid-template-columns:1fr}.etl-live-stage{position:static;min-height:auto}}@media(max-width:700px){.etl-output-row{display:block}.etl-output-row .button{margin-top:8px;width:100%}.etl-design-grid{grid-template-columns:1fr 1fr}}
                 </style>
                 <script>
                 (function(){
@@ -728,6 +727,21 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                         if (out) out.value = parts.join(' ') + ']';
                         syncPreview();
                     }
+                    function copyShortcode(){
+                        var out = document.getElementById('etl-gen-output');
+                        var btn = document.getElementById('etl-copy-shortcode');
+                        if (!out) return;
+                        out.select();
+                        try {
+                            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(out.value);
+                            else document.execCommand('copy');
+                            if (btn) {
+                                var old = btn.textContent;
+                                btn.textContent = 'Tersalin';
+                                setTimeout(function(){ btn.textContent = old; }, 1200);
+                            }
+                        } catch(e) {}
+                    }
                     ['etl-gen-category','etl-gen-design','etl-gen-theme','etl-gen-color','etl-gen-wa'].forEach(function(id){
                         var el = document.getElementById(id);
                         if (el) el.addEventListener('input', build);
@@ -740,6 +754,8 @@ if ( ! class_exists( 'Efisien_Tools_Loader' ) ) {
                             build();
                         });
                     }
+                    var copy = document.getElementById('etl-copy-shortcode');
+                    if (copy) copy.addEventListener('click', copyShortcode);
                     build();
                 })();
                 </script>
